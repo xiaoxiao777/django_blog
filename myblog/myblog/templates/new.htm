@@ -1,0 +1,68 @@
+{% extends "base.htm" %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="/static/js/kindeditor/themes/default/default.css" />
+
+<script charset="utf-8" src="/static/js/kindeditor/kindeditor.js"></script>
+<script charset="utf-8" src="/static/js/kindeditor/lang/zh_CN.js"></script>
+
+<script>
+var editor;
+			KindEditor.ready(function(K) {
+				editor = K.create('textarea[name="content"]', {
+					resizeType : 1,
+					allowPreviewEmoticons : true,
+					uploadJson : '../upload_json/',
+					fileManagerJson : '../file_manager_json/',
+					imageSizeLimit:'3MB',
+					allowImageUpload : true,
+					items : [
+						'code','fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+						'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+						'insertunorderedlist', '|', 'emoticons', 'image', 'link']
+				});
+                prettyPrint();
+            });
+</script>
+{% endblock %}
+
+
+
+{% block content %}
+<div class=main>
+<div class="left">
+<form method=post action=. >
+{% csrf_token %}
+<p>
+<label>文章标题</label><input name=title type=text value={{article.title}}></p>
+<p>
+<label>文章标签</label><input name=tag type=text value="{% for t in article.tag.all%}{{t.tag}},{%endfor%}" title='请用英文逗号分隔' ></p>
+<select name='cat' id='cat'  >
+    {%if article.detailcat %}<option class="level-1" value={{article.detailcat.id}}>&nbsp;&nbsp;&nbsp;{{article.detailcat.cat}}&nbsp;&nbsp;</option>{%endif%}
+	{%if article.maincat %}<option class="level-0" value={{article.maincat.id}}mc >&nbsp;&nbsp;&nbsp;{{article.maincat.cat}}&nbsp;&nbsp;</option>{%endif%}
+	
+    <option value='-1'>选择博客分类</option>
+    {% for mc in maincat %}
+        <option class="level-0" value={{mc.id}}mc>{{mc.cat}}&nbsp;&nbsp;</option>
+        {% for dc in mc.detailcat_set.all %}
+            <option class="level-1" value={{dc.id}}>&nbsp;&nbsp;&nbsp;{{dc.cat}}&nbsp;&nbsp;</option>
+        {% endfor %}
+    {% endfor%}
+</select>
+
+
+<textarea name="content" style="min-height:480px;width:100%;"> {{article.content}}</textarea>
+{%if article %}<input type=hidden name=aid value={{article.id}} />{% endif%}
+<input type="submit" name="button" value="生成博客" /> 
+
+</form>
+
+
+
+</div>
+</div>
+	
+
+{% endblock%}
+
+

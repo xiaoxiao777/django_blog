@@ -1,0 +1,21 @@
+{% extends "base.htm" %}
+
+
+
+{% block content %}
+<div class=main>
+<div class="left">
+<a class='album'>相册列表:</a>
+
+{% for album in albums %}
+<a class='album' href="/photo_list/?id={{album.id}}" >[{{album.album_name}}]</a>
+{% endfor %}
+
+
+</div>
+</div>
+	
+
+{% endblock%}
+
+

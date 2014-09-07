@@ -1,0 +1,135 @@
+{% extends "base.htm" %}
+
+
+
+
+
+{% block content %}
+<div class=main>
+<div class="left">
+<div class="post_date"><span class="date_m">{{article.createtime.month}}</span><span class="date_d">{{article.createtime.day}}</span><span class="date_y">{{article.createtime.year}}</span></div>
+<div class="article">
+<h2>{{article.title}} </h2> {% if user.is_authenticated %}<span style='float:right'><a href='/edit/{{article.id}}/'>修改编辑</a></span>{%endif%}
+<div class="article_info">作者：{{user.username}} &nbsp; 发布：{{article.createtime}} &nbsp; 分类：
+        {% if article.detailcat %}
+            <a href="/list/?type=decat&id={{article.detailcat.id}}" >{{article.detailcat.cat}}</a>
+        {% else %}
+            <a href="/list/?type=maincat&id={{article.maincat.id}}" >{{article.maincat.cat}}</a>
+        {%endif%} &nbsp; 阅读：{{article.readcount}} views &nbsp; <a href="#respond" title="《{{article.title}}》上的评论">抢沙发</a> &nbsp; </div><div class="clear"></div>
+        <div class="context">
+            
+            {{ article.content|safe}}
+<p>&nbsp;</p>
+<p>本文固定链接: <a href="{{request.path}}" rel="bookmark" title="{{article.title}}">{{articleurl}} | 静水虚舟</a></p></div>
+        </div>
+</div>
+<div class="articles">
+<div class="author_pic">
+					<a href="#" title=""><img style="display: inline;" original="http://0.gravatar.com/avatar/0200cc80079fca5b182b69b09e289a8e?s=48&amp;d=&amp;r=G" alt="" src="http://0.gravatar.com/avatar/0200cc80079fca5b182b69b09e289a8e?s=48&amp;d=&amp;r=G" class="avatar avatar-48 photo" height="48" width="48"></a>
+				</div>
+<div class="author_text">
+			<span class="spostinfo">
+				该日志由 {{user.username}} 于{{article.createtime.year}}年{{article.createtime.month}}月{{article.createtime.day}}日发表在 {% if article.detailcat %}
+            <a href="/list/?type=decat&id={{article.detailcat.id}}" >{{article.detailcat.cat}}</a>
+        {% else %}
+            <a href="/list/?type=maincat&id={{article.maincat.id}}" >{{article.maincat.cat}}</a>
+        {%endif%} 分类下，
+							你可以<a href="#respond">发表评论</a>，并在保留<a href="{{request.path}}" >原文地址</a>及作者的情况下<a href="{{request.path}}">引用</a>到你的网站或博客。
+				<br>
+				原创文章转载请注明: <a href="{{request.path}}" rel="bookmark" title="本文固定链接 {{articleurl}}">{{article.title}} | 静水虚舟</a><br>
+				关键字: {% for t in article.tag.all %}
+                <a href="/list/?type=tag&id={{t.id}}" rel="tag">{{t.tag}}</a>|
+                {% endfor %}			</span>
+				</div>
+</div>
+
+<div class="articles">
+{% if preart %}【上一篇】<a href="/article/{{preart.id}}/" rel="prev">{{preart.title}}</a>{% endif%}
+{% if aftart %}<br>【下一篇】<a href="/article/{{aftart.id}}/" rel="next">{{aftart.title}}</a>{% endif %}</div>
+
+<div class="articles">
+<div class="relatedposts">
+    {%if intreart %}
+	 <h3>您可能还会对这些文章感兴趣！</h3><ol>	
+                     {% for art in intreart %}
+                        <li><a href='/article/{{art.id}}/'>{{art.title}}</a></li>
+                     {% endfor %}
+                  </ol>
+    {% endif %}
+ </div><div class="clear"></div>
+</div>
+{% if comment%}
+<div class='articles'>
+<h3>{{article.title}}:目前有{{ comment|length}}条留言</h3>
+<ol class=commentlist>
+{% for cm in comment %}
+<li>
+   <div id="div-comment-317" class="comment-body">
+      		<div class="comment-author vcard"><img style="display: block;" original="http://0.gravatar.com/avatar/6971d649b5b8aa3839c7f75a540d8ee0?s=40&amp;d=&amp;r=G" alt="" src="http://0.gravatar.com/avatar/6971d649b5b8aa3839c7f75a540d8ee0?s=40&amp;d=&amp;r=G" class="avatar avatar-40 photo" height="40" width="40">					
+            <div class="floor">{{ forloop.counter }}楼</div><strong>{{cm.username}}</strong>:</div>
+				<p>{{cm.comment}}</p>
+        
+		<div class="clear"></div><span class="datetime">{{cm.time}} </span> <span></span>
+  </div>
+
+</li>
+{% endfor %}
+</ol>
+</div>
+{% endif%}
+<div class="articles">
+        <h3 id="comments" style="margin-bottom:10px">{{article.title}}：等您坐沙发呢！</h3>
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+		<div id="real-avatar">
+			<img alt="" src="http://0.gravatar.com/avatar/?s=40" class="avatar avatar-40 photo avatar-default" height="40" width="40">	</div>	
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/app/svn/svn-linux-copy-to-othe.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+		    <form action="/comment/{{article.id}}/" method="post" id="commentform">{% csrf_token %}
+      		<div id="comment-author-info">
+		<p>
+			<input name="author" id="author" class="commenttext" value="" size="22" tabindex="1" type="text">
+			<label for="author">昵称 *</label>
+		</p>
+		<p>
+			<input name="email" id="email" class="commenttext" value="" size="22" tabindex="2" type="text">
+			<label for="email">邮箱 * <a id="Get_Gravatar" title="查看如何申请一个自己的Gravatar全球通用头像" target="_blank" href="http://www.weisay.com/blog/apply-gravatar.html">（教你设置自己的个性头像）</a></label>
+		</p>
+	 	
+	</div>
+      <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea><div style="display: none;" id="loading"> 正在提交, 请稍候...</div><div style="display: none;" id="error">#</div></p>
+		<p>
+			<input class="submit" name="submit" id="submit" tabindex="5" value="提交留言" type="submit">
+			<input class="reset" name="reset" id="reset" tabindex="6" value="重写" type="reset">
+			<input name="comment_post_ID" value="1484" id="comment_post_ID" type="hidden">
+<input name="comment_parent" id="comment_parent" value="0" type="hidden">
+		</p>
+                <p>
+                {{  form.captcha  }} 
+               </p>
+		<script type="text/javascript">	//Crel+Enter
+			$(document).keypress(function(e){
+				if(e.ctrlKey && e.which == 13 || e.which == 10) { 
+					$(".submit").click();
+					document.body.focus();
+				} else if (e.shiftKey && e.which==13 || e.which == 10) {
+					$(".submit").click();
+				}          
+			})
+		</script>
+		<p style="display: none;"><input id="akismet_comment_nonce" name="akismet_comment_nonce" value="57cbf36a39" type="hidden"></p>		<span style="padding:0 0 2px 8px">快捷键：Ctrl+Enter</span>
+    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+  </div>
+
+	
+</div>
+{% endblock%}
+
+

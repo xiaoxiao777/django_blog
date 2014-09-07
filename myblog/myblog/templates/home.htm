@@ -1,0 +1,43 @@
+{% extends "base.htm" %}
+
+
+
+
+{% block content %}
+<div class=main>
+    {% for article in articles %}
+	<ul class="post" >
+<div class="post_date"><span class="date_m">{{article.createtime.month}}</span><span class="date_d">{{article.createtime.day}}</span><span class="date_y">{{article.createtime.year}}</span></div>
+<div class="article">
+<h2><a href="/article/{{article.id}}/"  title="详细阅读 {{article.title}}"> {{article.title}}</a><span class="new"></span></h2>
+<div class="entry_post">{{article.content |safe}}
+...<span class="more"><a href="/article/{{article.id}}/" title="详细阅读 {{article.title}}" rel="bookmark">阅读全文</a></span></div>
+<div class="clear"></div>
+<div class="info">作者：{{article.user.username}} | 分类：
+        {% if article.detailcat %}
+            <a href="/list/?type=decat&id={{article.detailcat.id}}" >{{article.detailcat.cat}}</a>
+        {% else %}
+            <a href="/list/?type=maincat&id={{article.maincat.id}}" >{{article.maincat.cat}}</a>
+        {%endif%}
+        | 阅读：{{article.readcount}} views | 标签：
+        {% for t in article.tag.all %}
+        <a href="/list/?type=tag&id={{t.id}}" rel="tag">{{t.tag}}</a>
+         {% endfor %}	
+</div>
+        
+<div class="comments_num">
+        
+        <a href="/article/{{article.id}}/#comments" title="《{{article.title}}》上的评论">{{article.comment_set.all | length}}条评论</a>
+</div>
+<div class="clear"></div>
+
+       		 
+</div>
+</ul>
+{% endfor %}
+<div style='display:none' class="navigation"><div class="pagination"><span class="current">1</span></div>
+</div>
+</div>
+{% endblock%}
+
+

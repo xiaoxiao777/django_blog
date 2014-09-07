@@ -1,0 +1,11 @@
+#div11 {position:relative; width:230px; height:250px; margin: 20px auto 0; }
+#div11 a {position:absolute; top:0px; left:0px; font-family: Microsoft YaHei; color:#fff; font-weight:bold; text-decoration:none; padding: 3px 6px; }
+#div11 a:hover {border: 2px solid #666; background:none; }
+
+#div11 .blue {color: blue;}
+#div11 .red {color: red;}
+#div11 .orange {color:#F90;}
+#div11 .pink {color: #F6F;}
+#div11 .black {color: #333;}
+#div11 .purple {color: #90F;}
+

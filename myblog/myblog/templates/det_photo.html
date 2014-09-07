@@ -1,0 +1,164 @@
+﻿{% extends "photo_base.htm" %}
+
+
+
+
+{% block content %}
+<style type="text/css">
+*{margin:0;padding:0;list-style-type:none;}
+a,img{border:0;}
+body{font:12px/180% Arial, Helvetica, sans-serif, "新宋体";}
+/* container */
+#container{width:1240px;margin:50px auto;}
+#container ul{width:1000px;list-style:none;float:left;margin-right:20px;}
+#container ul li{
+    margin-bottom:20px;
+    
+    -moz-border-bottom-colors:none;
+    -moz-border-left-colors:none;
+    -moz-border-right-colors:none;
+    -moz-border-top-colors:none;
+    background-color:#fff;
+    background-image:linear-gradient(to bottom, #FFFFFF, #E6E6E6);
+    background-repeat:repeat-x;
+    border-color:#e6e6e6 #e6e6e6 #B3B3B3;
+    border-image:none;
+    border-radius:4px 4px 4px 4px;
+    border-style:solid;
+    border-width:1px;
+    box-shadow:0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);  
+}
+#container ul li img{width:1000px;}
+.water_user{color:#666;padding:10px;}
+.water_option{background:#f5f5f5;border-top:1px #f0f0f0 solid;padding:5px 0 5px 10px;}
+.water_option:after{content:"";display:block;clear:both;visibility:hidden;}
+.water_option .option_item,.water_option .split{float:right;}
+.water_option .option_item{color:#3e88cd;text-decoration:none;margin-right:10px;}
+.water_option .option_item:hover{ text-decoration:underline;}
+.water_option .split{display:inline-block;margin:5px 10px 0 0;height:12px;width:1px;background-color:#D8D8D8;}
+
+.loadMeinvMOre{height:30px;line-height:30px;color:#999;text-align:center;background:#f9f9f9;display:block;clear:both;text-decoration:none;}
+.loadMeinvMOre:hover{ background:#f0f0f0;color:#666;}
+</style>
+
+
+<div id="container">
+
+	<ul class="col">
+		<li>
+			<div class="water_pic"><a href=""><img href="/det_photo/?id={{photo.id}}" src="/static/media/{{photo.headimg}}" alt="" /></a></div>
+			<div class="water_user"> <a href="/det_photo/?id={{photo.id}}" >{{photo.photo_name}}</a></div>
+			<div class="water_option">
+				<a href="/det_photo/?id={{photo.id}}" class="option_item option_comt">评论 </a>
+				<span class="split"></span>
+			</div>
+		</li>
+	</ul>
+    </span> <span></div><div class="clear"></div>
+	{% if preart %}【上一张】<a href="/det_photo/?id={{preart.id}}" rel="prev">{{preart.photo_name}}</a>{% endif%}
+    {% if aftart %}<br>【下一张】<a href="/det_photo/?id={{aftart.id}}" rel="next">{{aftart.photo_name}}</a>{% endif %}
+
+
+
+	{% if comment_photo%}
+    <div class='articles'>
+    <h3>{{article.title}}:目前有{{ comment_photo|length}}条留言</h3>
+    <ol class=commentlist>
+    {% for cm in comment_photo %}
+    <li>
+       <div id="div-comment-317" class="comment-body">
+               <div class="comment-author vcard"><img style="display: block;" original="http://0.gravatar.com/avatar/6971d649b5b8aa3839c7f75a540d8ee0?s=40&amp;d=&amp;r=G" alt="" src="http://0.gravatar.com/avatar/6971d649b5b8aa3839c7f75a540d8ee0?s=40&amp;d=&amp;r=G" class="avatar avatar-40 photo" height="40" width="40">
+                  <div class="floor">{{ forloop.counter }}楼</div><strong>{{cm.username}}</strong>:</div>
+                 <p>{{cm.comment}}</p>
+
+                <div class="clear"></div><span class="datetime">{{cm.time}} </span> <span></span>
+                </div>
+
+                </li>
+               {% endfor %}
+               </ol>
+           </div>
+        {% endif%}
+	
+</div><!--container end-->
+
+
+     <div id="respond_box">
+    <div id="respond">
+        <h3>发表评论</h3>
+        <div class="cancel-comment-reply">
+        <div id="real-avatar">
+            <img alt="" src="http://0.gravatar.com/avatar/?s=40" class="avatar avatar-40 photo avatar-default" height="40" width="40">  </div>
+            <small><a rel="nofollow" id="cancel-comment-reply-link" href="/app/svn/svn-linux-copy-to-othe.html#respond" style="display:none;">点击这里取消回复。</a></small>
+        </div>
+
+
+
+            <form action="/comment_photo/{{photo.id}}/" method="post" id="commentform">
+            {% csrf_token %}
+            <div id="comment-author-info">
+        <p>
+            <input name="author" id="author" class="commenttext" value="" size="22" tabindex="1" type="text">
+            <label for="author">昵称 *</label>
+        </p>
+        <p>
+            <input name="email" id="email" class="commenttext" value="" size="22" tabindex="2" type="text">
+            <label for="email">邮箱 * <a id="Get_Gravatar" title="查看如何申请一个自己的Gravatar全球通用头像" target="_blank" href="http://www.weisay.com/blog/apply-gravatar.html">（教你设>置自己的个性头像）</a></label>
+        </p>
+
+    </div>
+      <div class="clear"></div>
+        <p><textarea name="comment" id="comment" tabindex="4"></textarea><div style="display: none;" id="loading"> 正在提交, 请稍候...</div><div style="display: none;" id="error">#</div></p>
+        <p>
+            <input class="submit" name="submit" id="submit" tabindex="5" value="提交留言" type="submit">
+            <input class="reset" name="reset" id="reset" tabindex="6" value="重写" type="reset">
+            <input name="comment_post_ID" value="1484" id="comment_post_ID" type="hidden">
+<input name="comment_parent" id="comment_parent" value="0" type="hidden">
+        </p>
+        <script type="text/javascript"> //Crel+Enter
+            $(document).keypress(function(e){
+                if(e.ctrlKey && e.which == 13 || e.which == 10) { 
+                    $(".submit").click();
+                    document.body.focus();
+                } else if (e.shiftKey && e.which==13 || e.which == 10) {
+                    $(".submit").click();
+                }          
+            })
+        </script>
+        <p style="display: none;"><input id="akismet_comment_nonce" name="akismet_comment_nonce" value="57cbf36a39" type="hidden"></p>      <span style="padding:0 0 2px 8px">快捷键：Ctrl+Enter</span>
+    </form>
+
+    <div class="clear"></div>
+      </div>
+  </div>
+  </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<ul class="col"></ul>
+	
+	<ul class="col" style="margin-right:0"></ul>
+
+
+
+
+
+
+
+
+
+{% endblock %}

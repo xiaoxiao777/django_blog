@@ -1,0 +1,30 @@
+{% extends "base.htm" %}
+
+
+
+
+{% block content %}
+
+<a  >相册列表:</a>
+<hr/>
+
+{% for album in albums %}
+<a href="/photo/" >{{album.album_name}}</a>
+<hr/>
+{% endfor %}
+<div class=main>
+        <div class="search">
+            <form id="searchform" method="post" action="/create_album/">
+            {% csrf_token %}
+               <input type="text" value="相册名字" name="albumname" id="s" size="30" />
+               <input type="text" value="/static/photo/" name="albumpath" id="s" size="30" />
+               <button type="submit">创建相册</button>
+            </form>
+        </div><div class="clear"></div>
+
+
+
+</div>
+{% endblock%}
+
+
